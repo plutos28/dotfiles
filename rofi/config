@@ -1,0 +1,12 @@
+rofi.combi-modi:    window,drun,ssh
+rofi.font:          hack 10
+rofi.modi:          combi
+
+# theme (solarized or wal)
+#rofi.theme:         solarized
+
+# dark theme
+rofi.theme: ~/.cache/wal/colors-rofi-dark.rasi
+
+# Light theme.
+#rofi.theme: ~/.cache/wal/colors-rofi-light.rasi 
