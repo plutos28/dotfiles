@@ -12,11 +12,13 @@ Plug 'scrooloose/nerdtree'
 Plug 'ervandew/supertab'
 Plug 'tomtom/tcomment_vim'
 Plug 'raimondi/delimitmate'
-Plug 'dylanaraps/wal.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-surround'
-Plug 'mattn/emmet-vim'
 Plug 'airblade/vim-gitgutter'
+Plug 'dylanaraps/wal.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
 " Initialize plugin system
 call plug#end()
 
@@ -28,6 +30,50 @@ set number
 set ruler
 set belloff=all " turn off all bells
 set laststatus=2 " status bar
+
+" vim history
+set history=500
+
+" Set to auto read when a file is changed from the outside
+set autoread
+au FocusGained,BufEnter * checktime
+
+" leader key
+let mapleader = ","
+
+" Fast saving
+nmap <leader>w :w!<cr>
+
+" :W sudo saves the file
+" (useful for handling the permission-denied error)
+command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
+
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc
+if has("win16") || has("win32")
+    set wildignore+=.git\*,.hg\*,.svn\*
+else
+    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
+endif
+
+" Configure backspace so it acts as it should act
+set backspace=eol,start,indent
+set whichwrap+=<,>,h,l
+
+" Don't redraw while executing macros (good performance config)
+set lazyredraw
+
+" Disable highlight when <leader><cr> is pressed
+map <silent> <leader><cr> :noh<cr>
+
+map <leader>l :bnext<cr>
+map <leader>h :bprevious<cr>
+
+" Switch CWD to the directory of the open buffer
+map <leader>cd :cd %:p:h<cr>:pwd<cr>
+
+" Return to last edit position when opening files (You want this!)
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 " indentation
 set nowrap
@@ -47,7 +93,7 @@ set showmode
 set showcmd
 
 " searching stuff
-set hlsearch 
+set hlsearch
 set incsearch
 set ignorecase
 set smartcase
@@ -58,10 +104,12 @@ set t_Co=256
 set background=dark
 colorscheme wal
 
+if(has("termguicolors"))
+    set termguicolors
+endif
+
 if has("gui_running")
-    colorscheme solarized 
-    "set guifont=Fira_Code_Regular:h11 
-    set guifont=Hack:h10.5 
+    set guifont=JetBrains\ Mono\ 17
 endif
 
 " remove gui elements
@@ -70,6 +118,10 @@ set guioptions-=T " toolbar
 set guioptions-=r " right-hand scroll bar
 set guioptions-=L " left-hand scroll bar
 
-" nerdtree 
+" nerdtree
 map <C-n> :NERDTreeToggle<CR>
 
+" fzf 
+nnoremap <C-p> :Files<Cr>
+nnoremap <C-g> :Rg<Cr>
+nnoremap <silent><leader>b :Buffers<Cr>
